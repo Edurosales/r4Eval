@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConquisQuest — Región 4</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts: Orbitron (gamer titles) + Nunito (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PANTALLA 0 — SELECTOR DE ROL
+════════════════════════════════════════════════ -->
+<div id="screen-selector" class="screen active">
+
+  <!-- Partículas flotantes decorativas -->
+  <div class="particles">
+    <span class="star" style="--x:10%;--y:15%;--d:3s">⭐</span>
+    <span class="star" style="--x:85%;--y:10%;--d:4s">🌟</span>
+    <span class="star" style="--x:25%;--y:80%;--d:2.5s">✨</span>
+    <span class="star" style="--x:70%;--y:75%;--d:3.5s">⭐</span>
+    <span class="star" style="--x:50%;--y:5%;--d:2s">🌟</span>
+    <span class="star" style="--x:5%;--y:55%;--d:4.5s">✨</span>
+    <span class="star" style="--x:92%;--y:50%;--d:3.2s">⭐</span>
+  </div>
+
+  <div class="selector-container">
+
+    <!-- Logo + Branding -->
+    <div class="brand-header">
+      <!-- ══ REEMPLAZA LA RUTA DEL LOGO AQUÍ ══
+           Cambia "assets/logo.png" por la ruta real de tu logo.
+           Ejemplo: src="img/logo-club.png"
+           Dimensiones recomendadas: 120×120 px, fondo transparente (PNG).
+           Si no tienes logo listo, borra la etiqueta <img> y el <div class="logo-placeholder"> -->
+      <div class="logo-wrap">
+        <div class="logo-placeholder">
+          <img src="r4.png" alt="Logo Club" class="brand-logo" />
+          <!-- <i class="fa-solid fa-shield-halved logo-icon"></i> -->
+        </div>
+        <div class="logo-glow"></div>
+      </div>
+
+      <h1 class="brand-title">ConquisQuest</h1>
+      <p class="brand-sub">Sistema de Evaluación · Región 4 · APCE</p>
+      <p class="brand-credits">por <strong>Eduardo Villanueva</strong> — Conquistadores Región 4</p>
+    </div>
+
+    <!-- Pregunta de rol -->
+    <div class="role-question">
+      <p class="role-prompt">¿Cómo ingresás hoy?</p>
+      <div class="role-cards">
+
+        <!-- Conquistador -->
+        <div class="role-card" id="card-conquistador" onclick="selectRole('conquistador')">
+          <div class="role-card-glow"></div>
+          <div class="role-card-icon">
+            <span class="role-emoji">🧭</span>
+            <div class="role-level-badge">JUGADOR</div>
+          </div>
+          <h3 class="role-name">Conquistador</h3>
+          <p class="role-desc">Ve tu XP, insignias, requisitos y sube tus evidencias</p>
+          <div class="role-stats">
+            <span><i class="fa-solid fa-star"></i> XP</span>
+            <span><i class="fa-solid fa-shield"></i> Insignias</span>
+            <span><i class="fa-solid fa-fire"></i> Racha</span>
+          </div>
+          <button class="role-btn btn-conquistador">¡Entrar!</button>
+        </div>
+
+        <!-- Instructor -->
+        <div class="role-card" id="card-instructor" onclick="selectRole('instructor')">
+          <div class="role-card-glow glow-green"></div>
+          <div class="role-card-icon">
+            <span class="role-emoji">👨‍🏫</span>
+            <div class="role-level-badge badge-green">INSTRUCTOR</div>
+          </div>
+          <h3 class="role-name">Instructor</h3>
+          <p class="role-desc">Gestiona tu clase, registra avances y revisa el progreso de tus niños</p>
+          <div class="role-stats">
+            <span><i class="fa-solid fa-users"></i> Clase</span>
+            <span><i class="fa-solid fa-chart-line"></i> Avance</span>
+            <span><i class="fa-solid fa-calendar"></i> Plan</span>
+          </div>
+          <button class="role-btn btn-instructor">Ingresar</button>
+        </div>
+
+        <!-- Director / Regional -->
+        <div class="role-card" id="card-director" onclick="selectRole('director')">
+          <div class="role-card-glow glow-gold"></div>
+          <div class="role-card-icon">
+            <span class="role-emoji">🏆</span>
+            <div class="role-level-badge badge-gold">REGIONAL</div>
+          </div>
+          <h3 class="role-name">Director / Regional</h3>
+          <p class="role-desc">Panel de comando: semáforo, métricas globales y control de toda la zona</p>
+          <div class="role-stats">
+            <span><i class="fa-solid fa-globe"></i> Clubes</span>
+            <span><i class="fa-solid fa-traffic-light"></i> Semáforo</span>
+            <span><i class="fa-solid fa-crown"></i> Ranking</span>
+          </div>
+          <button class="role-btn btn-director">Ingresar</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PANTALLA 1 — DASHBOARD CONQUISTADOR
+════════════════════════════════════════════════ -->
+<div id="screen-conquistador" class="screen">
+
+  <!-- Navbar -->
+  <nav class="topnav nav-conquistador">
+    <div class="nav-left">
+      <button class="nav-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i></button>
+      <!-- Logo pequeño en nav: misma ruta que el logo principal -->
+      <div class="nav-logo-small">
+        <i class="fa-solid fa-shield-halved"></i>
+        <!-- <img src="assets/logo.png" alt="Logo" class="nav-logo-img" /> -->
+      </div>
+      <span class="nav-brand">ConquisQuest</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-xp-pill"><i class="fa-solid fa-star"></i> 1.240 XP</div>
+      <div class="nav-avatar">AM</div>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+
+    <!-- Hero de perfil -->
+    <section class="hero-profile">
+      <div class="hero-avatar-wrap">
+        <div class="hero-avatar">AM</div>
+        <div class="avatar-ring"></div>
+        <div class="level-crown">🏅 Niv. 7</div>
+      </div>
+      <div class="hero-info">
+        <h2 class="hero-name">Ana M. Quispe</h2>
+        <p class="hero-class"><i class="fa-solid fa-compass"></i> Clase: <strong>Explorador</strong> · Club Luz del Valle</p>
+        <div class="hero-tags">
+          <span class="tag tag-blue"><i class="fa-solid fa-fire"></i> Racha: 12 días</span>
+          <span class="tag tag-green"><i class="fa-solid fa-check"></i> 22 / 34 req.</span>
+          <span class="tag tag-purple"><i class="fa-solid fa-medal"></i> 5 insignias</span>
+        </div>
+      </div>
+      <div class="hero-xp-block">
+        <div class="xp-number">1,240</div>
+        <div class="xp-label">XP Totales</div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar" style="--pct:68%"></div>
+        </div>
+        <div class="xp-next">760 XP para nivel 8</div>
+      </div>
+    </section>
+
+    <!-- Grid de widgets -->
+    <div class="widgets-grid">
+
+      <!-- Widget: Progreso general -->
+      <div class="widget widget-progress">
+        <div class="widget-header">
+          <span class="widget-icon">📊</span>
+          <h3>Mi Progreso</h3>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" class="ring-bg"/>
+            <circle cx="60" cy="60" r="50" class="ring-fill" style="--pct:0.647"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct">64.7%</span>
+            <span class="ring-sub">completado</span>
+          </div>
+        </div>
+        <div class="progress-legend">
+          <div class="leg-item"><span class="dot dot-green"></span>Completados <strong>22</strong></div>
+          <div class="leg-item"><span class="dot dot-yellow"></span>En proceso <strong>7</strong></div>
+          <div class="leg-item"><span class="dot dot-red"></span>Pendientes <strong>5</strong></div>
+        </div>
+      </div>
+
+      <!-- Widget: Racha -->
+      <div class="widget widget-streak">
+        <div class="widget-header">
+          <span class="widget-icon">🔥</span>
+          <h3>Racha de Actividad</h3>
+        </div>
+        <div class="streak-big">12</div>
+        <div class="streak-label">días seguidos</div>
+        <div class="streak-calendar">
+          <!-- 7 días de ejemplo -->
+          <div class="streak-day done" title="Lun">L</div>
+          <div class="streak-day done" title="Mar">M</div>
+          <div class="streak-day done" title="Mié">X</div>
+          <div class="streak-day done" title="Jue">J</div>
+          <div class="streak-day done" title="Vie">V</div>
+          <div class="streak-day done" title="Sáb">S</div>
+          <div class="streak-day today" title="Dom">D</div>
+        </div>
+        <p class="streak-tip">¡Sigue así! Mañana ganas +50 XP bonus</p>
+      </div>
+
+      <!-- Widget: Insignias -->
+      <div class="widget widget-badges">
+        <div class="widget-header">
+          <span class="widget-icon">🛡️</span>
+          <h3>Mis Insignias</h3>
+        </div>
+        <div class="badges-grid">
+          <div class="badge-item earned" title="Primera Evidencia">
+            <div class="badge-icon">📸</div>
+            <div class="badge-name">Primera<br>Evidencia</div>
+          </div>
+          <div class="badge-item earned" title="Sección I Completa">
+            <div class="badge-icon">⭐</div>
+            <div class="badge-name">Sección I<br>Completa</div>
+          </div>
+          <div class="badge-item earned" title="Racha 7 días">
+            <div class="badge-icon">🔥</div>
+            <div class="badge-name">Racha<br>7 días</div>
+          </div>
+          <div class="badge-item earned" title="Campamento 2026">
+            <div class="badge-icon">🏕️</div>
+            <div class="badge-name">Campa-<br>mento 26</div>
+          </div>
+          <div class="badge-item earned" title="Servicio Comunitario">
+            <div class="badge-icon">🤝</div>
+            <div class="badge-name">Servicio<br>Comunit.</div>
+          </div>
+          <div class="badge-item locked" title="Aún no desbloqueado">
+            <div class="badge-icon">🔒</div>
+            <div class="badge-name">Sección II<br>Completa</div>
+          </div>
+          <div class="badge-item locked" title="Aún no desbloqueado">
+            <div class="badge-icon">🔒</div>
+            <div class="badge-name">Racha<br>30 días</div>
+          </div>
+          <div class="badge-item locked" title="Aún no desbloqueado">
+            <div class="badge-icon">🔒</div>
+            <div class="badge-name">100%<br>Completo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget: Requisitos próximos -->
+      <div class="widget widget-requisitos">
+        <div class="widget-header">
+          <span class="widget-icon">📋</span>
+          <h3>Próximos Requisitos</h3>
+        </div>
+        <div class="req-list">
+          <div class="req-item status-green">
+            <div class="req-status-dot"></div>
+            <div class="req-info">
+              <span class="req-sec">III · 2</span>
+              <span class="req-name">Nudos: ballestrinque y ocho</span>
+            </div>
+            <span class="req-badge-status">✔ Hecho</span>
+          </div>
+          <div class="req-item status-yellow">
+            <div class="req-status-dot"></div>
+            <div class="req-info">
+              <span class="req-sec">III · 4</span>
+              <span class="req-name">Leer Vaso de Barro — Cap. 1-5</span>
+            </div>
+            <span class="req-badge-status">○ Leyendo</span>
+          </div>
+          <div class="req-item status-yellow">
+            <div class="req-status-dot"></div>
+            <div class="req-info">
+              <span class="req-sec">IV · 1</span>
+              <span class="req-name">Clase Bíblica mensual (jul.)</span>
+            </div>
+            <span class="req-badge-status">○ Pendiente</span>
+          </div>
+          <div class="req-item status-red">
+            <div class="req-status-dot"></div>
+            <div class="req-info">
+              <span class="req-sec">V · 3</span>
+              <span class="req-name">Caminata 5 km + informe</span>
+            </div>
+            <span class="req-badge-status">✘ Sin iniciar</span>
+          </div>
+          <div class="req-item status-red">
+            <div class="req-status-dot"></div>
+            <div class="req-info">
+              <span class="req-sec">VI · 1</span>
+              <span class="req-name">Armar carpa sin ayuda</span>
+            </div>
+            <span class="req-badge-status">✘ Sin iniciar</span>
+          </div>
+        </div>
+        <button class="btn-ver-todos">Ver todos los requisitos <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <!-- Widget: Subir evidencia -->
+      <div class="widget widget-upload">
+        <div class="widget-header">
+          <span class="widget-icon">📤</span>
+          <h3>Subir Evidencia</h3>
+        </div>
+        <div class="upload-area" id="uploadArea" onclick="triggerUpload()">
+          <div class="upload-icon">📁</div>
+          <p class="upload-title">Arrastrá tu foto o video aquí</p>
+          <p class="upload-sub">o hacé clic para seleccionar</p>
+          <p class="upload-formats">JPG · PNG · MP4 · PDF · máx. 50 MB</p>
+        </div>
+        <div class="upload-req-select">
+          <label>Requisito:</label>
+          <select class="upload-select">
+            <option>III · 4 — Leer Vaso de Barro</option>
+            <option>IV · 1 — Clase Bíblica</option>
+            <option>V · 3 — Caminata 5 km</option>
+            <option>VI · 1 — Armar carpa</option>
+          </select>
+        </div>
+        <button class="btn-upload"><i class="fa-solid fa-upload"></i> Subir y ganar XP</button>
+      </div>
+
+      <!-- Widget: Ranking del club -->
+      <div class="widget widget-ranking">
+        <div class="widget-header">
+          <span class="widget-icon">🏆</span>
+          <h3>Ranking del Club</h3>
+        </div>
+        <div class="ranking-list">
+          <div class="rank-item rank-1">
+            <span class="rank-pos">🥇</span>
+            <div class="rank-avatar">LM</div>
+            <div class="rank-name">Luis M.</div>
+            <div class="rank-xp">1,580 XP</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:100%"></div></div>
+          </div>
+          <div class="rank-item rank-2">
+            <span class="rank-pos">🥈</span>
+            <div class="rank-avatar av-green">SP</div>
+            <div class="rank-name">Sara P.</div>
+            <div class="rank-xp">1,420 XP</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:90%"></div></div>
+          </div>
+          <div class="rank-item rank-me">
+            <span class="rank-pos">🥉</span>
+            <div class="rank-avatar av-purple">AM</div>
+            <div class="rank-name">Ana M. <span class="me-tag">TÚ</span></div>
+            <div class="rank-xp">1,240 XP</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:78%"></div></div>
+          </div>
+          <div class="rank-item">
+            <span class="rank-pos">4</span>
+            <div class="rank-avatar av-orange">DR</div>
+            <div class="rank-name">Diego R.</div>
+            <div class="rank-xp">980 XP</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:62%"></div></div>
+          </div>
+          <div class="rank-item">
+            <span class="rank-pos">5</span>
+            <div class="rank-avatar av-teal">CT</div>
+            <div class="rank-name">Camila T.</div>
+            <div class="rank-xp">840 XP</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:53%"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /widgets-grid -->
+  </main>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PANTALLA 2 — DASHBOARD INSTRUCTOR
+════════════════════════════════════════════════ -->
+<div id="screen-instructor" class="screen">
+
+  <nav class="topnav nav-instructor">
+    <div class="nav-left">
+      <button class="nav-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="nav-logo-small">
+        <i class="fa-solid fa-shield-halved"></i>
+        <!-- <img src="assets/logo.png" alt="Logo" class="nav-logo-img" /> -->
+      </div>
+      <span class="nav-brand">ConquisQuest</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-xp-pill nav-pill-green"><i class="fa-solid fa-chalkboard-user"></i> Instructor</div>
+      <div class="nav-avatar av-green">JR</div>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+
+    <!-- Header instructor -->
+    <section class="inst-header">
+      <div class="inst-header-info">
+        <h2 class="inst-name">Prof. Juan Ríos</h2>
+        <p class="inst-class"><i class="fa-solid fa-compass"></i> Clase: <strong>Explorador</strong> · Club Luz del Valle · Zona 4</p>
+      </div>
+      <div class="inst-stats-row">
+        <div class="inst-stat">
+          <div class="inst-stat-val">12</div>
+          <div class="inst-stat-label">Alumnos</div>
+        </div>
+        <div class="inst-stat">
+          <div class="inst-stat-val" style="color:var(--green)">22</div>
+          <div class="inst-stat-label">Req. cubiertos</div>
+        </div>
+        <div class="inst-stat">
+          <div class="inst-stat-val" style="color:var(--gold)">64%</div>
+          <div class="inst-stat-label">Avance prom.</div>
+        </div>
+        <div class="inst-stat">
+          <div class="inst-stat-val" style="color:var(--red)">3</div>
+          <div class="inst-stat-label">Alertas ⚠️</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="widgets-grid">
+
+      <!-- Widget: Avance de alumnos -->
+      <div class="widget widget-alumnos" style="grid-column: span 2;">
+        <div class="widget-header">
+          <span class="widget-icon">👥</span>
+          <h3>Avance por Alumno</h3>
+          <div class="widget-actions">
+            <button class="btn-sm btn-outline"><i class="fa-solid fa-filter"></i> Filtrar</button>
+            <button class="btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Registrar</button>
+          </div>
+        </div>
+        <div class="alumnos-table">
+          <div class="at-header">
+            <span>Alumno</span><span>✔ Comp.</span><span>○ Proc.</span><span>✘ Pend.</span><span>% Avance</span><span>Estado</span>
+          </div>
+          <div class="at-row" data-status="green">
+            <div class="at-name"><div class="at-av">LM</div> Luis M.</div>
+            <div class="at-val green-val">28</div>
+            <div class="at-val orange-val">4</div>
+            <div class="at-val red-val">2</div>
+            <div class="at-prog"><div class="at-prog-bar" style="--w:82%"></div><span>82%</span></div>
+            <div class="semaforo s-green">🟢 Bien</div>
+          </div>
+          <div class="at-row" data-status="green">
+            <div class="at-name"><div class="at-av av-purple">AM</div> Ana M.</div>
+            <div class="at-val green-val">22</div>
+            <div class="at-val orange-val">7</div>
+            <div class="at-val red-val">5</div>
+            <div class="at-prog"><div class="at-prog-bar" style="--w:65%"></div><span>65%</span></div>
+            <div class="semaforo s-green">🟢 Bien</div>
+          </div>
+          <div class="at-row" data-status="yellow">
+            <div class="at-name"><div class="at-av av-orange">SP</div> Sara P.</div>
+            <div class="at-val green-val">18</div>
+            <div class="at-val orange-val">5</div>
+            <div class="at-val red-val">11</div>
+            <div class="at-prog"><div class="at-prog-bar" style="--w:53%"></div><span>53%</span></div>
+            <div class="semaforo s-yellow">🟡 Revisar</div>
+          </div>
+          <div class="at-row" data-status="red">
+            <div class="at-name"><div class="at-av av-red">DR</div> Diego R.</div>
+            <div class="at-val green-val">9</div>
+            <div class="at-val orange-val">3</div>
+            <div class="at-val red-val">22</div>
+            <div class="at-prog"><div class="at-prog-bar" style="--w:26%"></div><span>26%</span></div>
+            <div class="semaforo s-red">🔴 Atención</div>
+          </div>
+          <div class="at-row" data-status="yellow">
+            <div class="at-name"><div class="at-av av-teal">CT</div> Camila T.</div>
+            <div class="at-val green-val">20</div>
+            <div class="at-val orange-val">6</div>
+            <div class="at-val red-val">8</div>
+            <div class="at-prog"><div class="at-prog-bar" style="--w:59%"></div><span>59%</span></div>
+            <div class="semaforo s-yellow">🟡 Revisar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget: Evidencias pendientes de revisar -->
+      <div class="widget widget-evidencias">
+        <div class="widget-header">
+          <span class="widget-icon">📥</span>
+          <h3>Evidencias a Revisar</h3>
+          <span class="badge-count">3</span>
+        </div>
+        <div class="ev-list">
+          <div class="ev-item">
+            <div class="ev-thumb">📸</div>
+            <div class="ev-info">
+              <span class="ev-alumno">Ana M.</span>
+              <span class="ev-req">III·4 — Vaso de Barro</span>
+              <span class="ev-time">Hace 2 horas</span>
+            </div>
+            <div class="ev-actions">
+              <button class="ev-btn ev-approve" title="Aprobar">✔</button>
+              <button class="ev-btn ev-reject" title="Rechazar">✘</button>
+            </div>
+          </div>
+          <div class="ev-item">
+            <div class="ev-thumb">🎥</div>
+            <div class="ev-info">
+              <span class="ev-alumno">Luis M.</span>
+              <span class="ev-req">V·3 — Caminata 5 km</span>
+              <span class="ev-time">Ayer, 6:40 pm</span>
+            </div>
+            <div class="ev-actions">
+              <button class="ev-btn ev-approve" title="Aprobar">✔</button>
+              <button class="ev-btn ev-reject" title="Rechazar">✘</button>
+            </div>
+          </div>
+          <div class="ev-item">
+            <div class="ev-thumb">📄</div>
+            <div class="ev-info">
+              <span class="ev-alumno">Camila T.</span>
+              <span class="ev-req">IV·1 — Clase Bíblica</span>
+              <span class="ev-time">Hace 3 días</span>
+            </div>
+            <div class="ev-actions">
+              <button class="ev-btn ev-approve" title="Aprobar">✔</button>
+              <button class="ev-btn ev-reject" title="Rechazar">✘</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget: Próximas reuniones -->
+      <div class="widget widget-calendar">
+        <div class="widget-header">
+          <span class="widget-icon">📅</span>
+          <h3>Próximas Actividades</h3>
+        </div>
+        <div class="cal-list">
+          <div class="cal-item cal-reunion">
+            <div class="cal-date"><span class="cal-day">06</span><span class="cal-month">Sep</span></div>
+            <div class="cal-info">
+              <span class="cal-tipo">🏫 Reunión</span>
+              <span class="cal-title">Clase regular — Sección IV</span>
+              <span class="cal-place">Salón de clases</span>
+            </div>
+          </div>
+          <div class="cal-item cal-biblica">
+            <div class="cal-date"><span class="cal-day">13</span><span class="cal-month">Sep</span></div>
+            <div class="cal-info">
+              <span class="cal-tipo">📖 Clase Bíblica</span>
+              <span class="cal-title">Clase Bíblica mensual</span>
+              <span class="cal-place">Sala adultos — Iglesia</span>
+            </div>
+          </div>
+          <div class="cal-item cal-caminata">
+            <div class="cal-date"><span class="cal-day">20</span><span class="cal-month">Sep</span></div>
+            <div class="cal-info">
+              <span class="cal-tipo">🥾 Caminata</span>
+              <span class="cal-title">Caminata 5 km — Parque Zonal</span>
+              <span class="cal-place">Parque Zonal Norte</span>
+            </div>
+          </div>
+          <div class="cal-item cal-campamento">
+            <div class="cal-date"><span class="cal-day">27</span><span class="cal-month">Sep</span></div>
+            <div class="cal-info">
+              <span class="cal-tipo">🏕️ Campamento</span>
+              <span class="cal-title">Campamento Luz y Vida</span>
+              <span class="cal-place">Campamento regional</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PANTALLA 3 — DASHBOARD DIRECTOR / REGIONAL
+════════════════════════════════════════════════ -->
+<div id="screen-director" class="screen">
+
+  <nav class="topnav nav-director">
+    <div class="nav-left">
+      <button class="nav-back" onclick="goBack()"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="nav-logo-small">
+        <i class="fa-solid fa-shield-halved"></i>
+        <!-- <img src="assets/logo.png" alt="Logo" class="nav-logo-img" /> -->
+      </div>
+      <span class="nav-brand">ConquisQuest</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-xp-pill nav-pill-gold"><i class="fa-solid fa-crown"></i> Regional</div>
+      <div class="nav-avatar av-gold">AA</div>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+
+    <!-- Header director -->
+    <section class="dir-header">
+      <div>
+        <h2 class="dir-name">GM. Abel Alarico</h2>
+        <p class="dir-sub"><i class="fa-solid fa-map-location-dot"></i> Coordinación Regional Zona 4 · APCE · 2026</p>
+      </div>
+      <div class="dir-global-stats">
+        <div class="dir-stat"><div class="dsv">6</div><div class="dsl">Clubes</div></div>
+        <div class="dir-stat"><div class="dsv">142</div><div class="dsl">Conquistadores</div></div>
+        <div class="dir-stat"><div class="dsv" style="color:var(--green)">58%</div><div class="dsl">Avance zonal</div></div>
+        <div class="dir-stat"><div class="dsv" style="color:var(--red)">11</div><div class="dsl">🔴 Críticos</div></div>
+      </div>
+    </section>
+
+    <div class="widgets-grid">
+
+      <!-- Widget: Semáforo de clubes -->
+      <div class="widget widget-semaforo" style="grid-column: span 2;">
+        <div class="widget-header">
+          <span class="widget-icon">🚦</span>
+          <h3>Semáforo de Clubes — Zona 4</h3>
+          <div class="semaforo-legend">
+            <span class="s-leg green">🟢 Aprobado</span>
+            <span class="s-leg yellow">🟡 Revisar</span>
+            <span class="s-leg red">🔴 Presencial</span>
+          </div>
+        </div>
+        <div class="clubs-grid">
+          <div class="club-card s-verde">
+            <div class="club-card-top">
+              <div class="club-semaforo">🟢</div>
+              <div class="club-name">Club Luz del Valle</div>
+              <div class="club-pct">78%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:78%;--c:#22c55e"></div></div>
+            <div class="club-stats">
+              <span>👥 24</span><span>✔ 18</span><span>🟡 4</span><span>🔴 2</span>
+            </div>
+          </div>
+          <div class="club-card s-verde">
+            <div class="club-card-top">
+              <div class="club-semaforo">🟢</div>
+              <div class="club-name">Club Monte Sinaí</div>
+              <div class="club-pct">71%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:71%;--c:#22c55e"></div></div>
+            <div class="club-stats">
+              <span>👥 18</span><span>✔ 13</span><span>🟡 3</span><span>🔴 2</span>
+            </div>
+          </div>
+          <div class="club-card s-amarillo">
+            <div class="club-card-top">
+              <div class="club-semaforo">🟡</div>
+              <div class="club-name">Club Río de Vida</div>
+              <div class="club-pct">52%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:52%;--c:#f59e0b"></div></div>
+            <div class="club-stats">
+              <span>👥 31</span><span>✔ 16</span><span>🟡 10</span><span>🔴 5</span>
+            </div>
+          </div>
+          <div class="club-card s-amarillo">
+            <div class="club-card-top">
+              <div class="club-semaforo">🟡</div>
+              <div class="club-name">Club Estrella Polar</div>
+              <div class="club-pct">48%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:48%;--c:#f59e0b"></div></div>
+            <div class="club-stats">
+              <span>👥 22</span><span>✔ 11</span><span>🟡 7</span><span>🔴 4</span>
+            </div>
+          </div>
+          <div class="club-card s-rojo">
+            <div class="club-card-top">
+              <div class="club-semaforo">🔴</div>
+              <div class="club-name">Club Renuevo</div>
+              <div class="club-pct">28%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:28%;--c:#ef4444"></div></div>
+            <div class="club-stats">
+              <span>👥 27</span><span>✔ 8</span><span>🟡 9</span><span>🔴 10</span>
+            </div>
+          </div>
+          <div class="club-card s-rojo">
+            <div class="club-card-top">
+              <div class="club-semaforo">🔴</div>
+              <div class="club-name">Club Fe y Esperanza</div>
+              <div class="club-pct">19%</div>
+            </div>
+            <div class="club-progress"><div class="club-bar" style="--w:19%;--c:#ef4444"></div></div>
+            <div class="club-stats">
+              <span>👥 20</span><span>✔ 4</span><span>🟡 6</span><span>🔴 10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget: Ranking zonal -->
+      <div class="widget widget-ranking-dir">
+        <div class="widget-header">
+          <span class="widget-icon">🏆</span>
+          <h3>Ranking Zonal</h3>
+        </div>
+        <div class="ranking-list">
+          <div class="rank-item rank-1">
+            <span class="rank-pos">🥇</span>
+            <div class="rank-name">Luz del Valle</div>
+            <div class="rank-xp">78%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:100%"></div></div>
+          </div>
+          <div class="rank-item rank-2">
+            <span class="rank-pos">🥈</span>
+            <div class="rank-name">Monte Sinaí</div>
+            <div class="rank-xp">71%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:91%"></div></div>
+          </div>
+          <div class="rank-item">
+            <span class="rank-pos">3</span>
+            <div class="rank-name">Río de Vida</div>
+            <div class="rank-xp">52%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:67%"></div></div>
+          </div>
+          <div class="rank-item">
+            <span class="rank-pos">4</span>
+            <div class="rank-name">Estrella Polar</div>
+            <div class="rank-xp">48%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:62%"></div></div>
+          </div>
+          <div class="rank-item" style="opacity:.7">
+            <span class="rank-pos">5</span>
+            <div class="rank-name">Renuevo</div>
+            <div class="rank-xp">28%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:36%"></div></div>
+          </div>
+          <div class="rank-item" style="opacity:.6">
+            <span class="rank-pos">6</span>
+            <div class="rank-name">Fe y Esperanza</div>
+            <div class="rank-xp">19%</div>
+            <div class="rank-bar-wrap"><div class="rank-bar" style="--w:24%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget: Casos a evaluar presencialmente (Rojo) -->
+      <div class="widget widget-casos-rojos">
+        <div class="widget-header">
+          <span class="widget-icon">🔴</span>
+          <h3>Evaluación Presencial Requerida</h3>
+          <span class="badge-count badge-red">11</span>
+        </div>
+        <div class="casos-list">
+          <div class="caso-item">
+            <div class="caso-semaforo">🔴</div>
+            <div class="caso-info">
+              <span class="caso-nombre">Diego R.</span>
+              <span class="caso-club">Luz del Valle · Explorador</span>
+              <span class="caso-motivo">Falta evidencia Sec. III y V</span>
+            </div>
+            <button class="caso-btn">Citar</button>
+          </div>
+          <div class="caso-item">
+            <div class="caso-semaforo">🔴</div>
+            <div class="caso-info">
+              <span class="caso-nombre">Marco A.</span>
+              <span class="caso-club">Club Renuevo · Pionero</span>
+              <span class="caso-motivo">Solo 8 de 34 requisitos</span>
+            </div>
+            <button class="caso-btn">Citar</button>
+          </div>
+          <div class="caso-item">
+            <div class="caso-semaforo">🟡</div>
+            <div class="caso-info">
+              <span class="caso-nombre">Lucía V.</span>
+              <span class="caso-club">Río de Vida · Guía</span>
+              <span class="caso-motivo">Video de nudos incompleto</span>
+            </div>
+            <button class="caso-btn" style="background:var(--yellow);color:#000">Revisar</button>
+          </div>
+          <div class="caso-item">
+            <div class="caso-semaforo">🔴</div>
+            <div class="caso-info">
+              <span class="caso-nombre">Renzo P.</span>
+              <span class="caso-club">Fe y Esperanza · Amigo</span>
+              <span class="caso-motivo">Sin evidencias subidas</span>
+            </div>
+            <button class="caso-btn">Citar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
